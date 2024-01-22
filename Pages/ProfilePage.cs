@@ -12,7 +12,7 @@ namespace CompetitionTaskMars.Pages
     {
         public void GoToEducationPage()
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
             //Naviage to education page
             IWebElement educationTab = driver.FindElement(By.XPath("//div[@class='ui top attached tabular menu']/a[@data-tab='third']"));
             educationTab.Click();
