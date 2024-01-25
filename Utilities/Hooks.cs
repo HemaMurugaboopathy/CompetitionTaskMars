@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompetitionTaskMars.Utilities
 {
-    internal class Hooks
+    public class Hooks
     {
     }
 }

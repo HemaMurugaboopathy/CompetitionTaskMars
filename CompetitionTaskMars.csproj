@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="Data\educationData.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
     <PackageReference Include="ExtentReports" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NUnit" Version="4.0.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
@@ -33,6 +35,12 @@
 
   <ItemGroup>
     <Folder Include="ExtentReports\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\educationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
