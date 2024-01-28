@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "CollegeName": "Lincoln University",
+    "Country": "New Zealand",
+    "Title": "M.A",
+    "Degree": "Master of Applied Computing",
+    "GraduationYear": "2023"
+  },
+  {
+    "Id": 2,
+    "CollegeName": "@#$%^",
+    "Country": "New Zealand",
+    "Title": "M.A",
+    "Degree": "Master of Applied Computing",
+    "GraduationYear": "2023"
+  }
+]

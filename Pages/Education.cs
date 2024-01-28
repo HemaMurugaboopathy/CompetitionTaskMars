@@ -17,11 +17,14 @@ namespace CompetitionTaskMars.Pages
         private IWebElement yearDropdown => driver.FindElement(By.XPath("//select[@name='yearOfGraduation']"));
         private IWebElement addButton => driver.FindElement(By.XPath("//input[@value='Add']"));
         private IWebElement SuccessMessage => driver.FindElement(By.XPath("//div[@class='ns-box-inner']"));
+     
         private Func<string, IWebElement> newCollegeName = CollegeName => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{CollegeName}']"));
         private Func<string, IWebElement> newCountry = Country => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Country}']"));
         private Func<string, IWebElement> newTitle = Title => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Title}']"));
         private Func<string, IWebElement> newDegree = Degree => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Degree}']"));
         private Func<string, IWebElement> newGraduationYear = GraduationYear => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{GraduationYear}']"));
+        
+        private IWebElement updateButton => driver.FindElement(By.XPath("//input[@value=\"Update\"]"));
 
         public void Add_Education(EducationData educationData) 
          {
@@ -47,7 +50,6 @@ namespace CompetitionTaskMars.Pages
             selectYearOption.SelectByValue(educationData.GraduationYear);
 
             Wait.WaitToBeClickable(driver, "XPath", "//input[@value='Add']", 8);
-
             //Click Add button 
             addButton.Click(); 
         }
@@ -56,7 +58,7 @@ namespace CompetitionTaskMars.Pages
             Wait.WaitToExist(driver, "XPath", "//div[@class='ns-box-inner']", 8);
             //Get the text message after entering education details
             return SuccessMessage.Text;
-            }
+        }
         public string getCollegeName(string CollegeName)
         {
             Thread.Sleep(4000);
@@ -83,6 +85,7 @@ namespace CompetitionTaskMars.Pages
             //Wait.WaitToExist(driver, "XPath", "//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Degree}']", 8);
             return newDegree(Degree).Text;
         }
+
         public string getGraduationYear(string GraduationYear)
         {
             Thread.Sleep(4000);
@@ -90,6 +93,54 @@ namespace CompetitionTaskMars.Pages
             return newGraduationYear(GraduationYear).Text;
         }
 
+        public void Edit_Education(EducationData existingEducationData, EducationData newEducationData)
+        {
+            Thread.Sleep(4000);
+
+            string xPath = $@"//div[@data-tab='third']//tr[" +
+            $"td[1]='{existingEducationData.Country}' and td[2]='{existingEducationData.CollegeName}'" +
+            $" and td[3]='{existingEducationData.Title}' and td[4]='{existingEducationData.Degree}'" +
+            $" and td[5]='{existingEducationData.GraduationYear}']/td[last()]/span[1]";
+
+            //Click edit icon to edit an existing college
+            IWebElement editIcon = driver.FindElement(By.XPath(xPath));
+            editIcon.Click();
+
+            //Enter College/University name
+            collegeTextbox.Clear();
+            collegeTextbox.SendKeys(newEducationData.CollegeName);
+
+            //Select Country of college
+            SelectElement selectCountryOption = new SelectElement(countryDropdown);
+            selectCountryOption.SelectByValue(newEducationData.Country);
+
+            //Select Title
+            SelectElement selectTitleOption = new SelectElement(titleDropdown);
+            selectTitleOption.SelectByValue(newEducationData.Title);
+
+            //Enter Degree
+            degreeTextbox.Clear();
+            degreeTextbox.SendKeys(newEducationData.Degree);
+
+            //Select Year of graduation
+            SelectElement selectYearOption = new SelectElement(yearDropdown);
+            selectYearOption.SelectByValue(newEducationData.GraduationYear);
+
+            //Click Update Button
+            updateButton.Click();
+        }
+
+        public void Delete_Education(EducationData existingEducationData) 
+        {
+            //Delete an existing education
+
+            string xPath = $@"//div[@data-tab='third']//tr[" +
+           $"td[1]='{existingEducationData.Country}' and td[2]='{existingEducationData.CollegeName}'" +
+           $" and td[3]='{existingEducationData.Title}' and td[4]='{existingEducationData.Degree}'" +
+           $" and td[5]='{existingEducationData.GraduationYear}']/td[last()]/span[2]";
+            IWebElement deleteIcon = driver.FindElement(By.XPath(xPath));
+            deleteIcon.Click();
+        }
     }
 
  }

@@ -15,7 +15,9 @@
 
   <ItemGroup>
     <None Remove=".gitignore" />
-    <None Remove="Data\educationData.json" />
+    <None Remove="Data\addEducationData.json" />
+    <None Remove="Data\deleteEducationData.json" />
+    <None Remove="Data\editEducationData.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +40,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\educationData.json">
+    <Content Include="Data\deleteEducationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\editEducationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\addEducationData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
