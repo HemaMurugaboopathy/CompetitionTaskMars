@@ -1,6 +1,7 @@
 ﻿using CompetitionTaskMars.Data;
 using CompetitionTaskMars.Utilities;
 using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Presentation;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -25,6 +26,7 @@ namespace CompetitionTaskMars.Pages
         private Func<string, IWebElement> newGraduationYear = GraduationYear => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{GraduationYear}']"));
         
         private IWebElement updateButton => driver.FindElement(By.XPath("//input[@value=\"Update\"]"));
+        private IWebElement cancelButton => driver.FindElement(By.XPath("//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//input[@value='Cancel']"));
 
         public void Add_Education(EducationData educationData) 
          {
@@ -128,6 +130,17 @@ namespace CompetitionTaskMars.Pages
 
             //Click Update Button
             updateButton.Click();
+        }
+        public string getCancel()
+        {
+            try
+            {
+               return cancelButton.Text;
+            }
+            catch (NoSuchElementException)
+            {
+                return null;
+            }
         }
 
         public void Delete_Education(EducationData existingEducationData) 
