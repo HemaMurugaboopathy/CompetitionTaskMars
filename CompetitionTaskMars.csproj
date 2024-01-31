@@ -15,8 +15,11 @@
 
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="Data\addCertificationData.json" />
     <None Remove="Data\addEducationData.json" />
+    <None Remove="Data\deleteCertificationData.json" />
     <None Remove="Data\deleteEducationData.json" />
+    <None Remove="Data\editCertificationData.json" />
     <None Remove="Data\editEducationData.json" />
   </ItemGroup>
 
@@ -36,11 +39,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ExtentReports\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Content Include="Data\addCertificationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\deleteCertificationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\deleteEducationData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\editCertificationData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\editEducationData.json">

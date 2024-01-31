@@ -13,6 +13,7 @@ namespace CompetitionTaskMars.Data
 
             return JsonConvert.DeserializeObject<List<EducationData>>(jsonContent) ?? new List<EducationData>();
         }
+        
     }
 }
         

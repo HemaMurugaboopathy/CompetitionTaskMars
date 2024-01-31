@@ -28,6 +28,23 @@ namespace CompetitionTaskMars.Pages
         private IWebElement updateButton => driver.FindElement(By.XPath("//input[@value=\"Update\"]"));
         private IWebElement cancelButton => driver.FindElement(By.XPath("//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//input[@value='Cancel']"));
 
+        public void Delete_All()
+        {
+            try
+            {
+                Wait.WaitToBeClickable(driver, "XPath", "//div[@data-tab='third']//i[@class='remove icon']", 8);
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                return;
+            }
+            IReadOnlyCollection<IWebElement> deleteButtons = driver.FindElements(By.XPath("//div[@data-tab='third']//i[@class='remove icon']"));
+            //Delete all records in the list
+            foreach (IWebElement deleteButton in deleteButtons)
+            {
+                deleteButton.Click();
+            }
+        }
         public void Add_Education(EducationData educationData) 
          {
             //Click Add New button 

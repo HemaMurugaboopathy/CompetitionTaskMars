@@ -7,9 +7,12 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using RazorEngine;
+using System.Drawing.Imaging;
 
 namespace CompetitionTaskMars.Tests
 {
@@ -63,22 +66,14 @@ namespace CompetitionTaskMars.Tests
         [Test, Order(1), Description("This test is deleting all entries before addind new data")]
         public void Delete_All()
         {
-            try
-            {
-                Wait.WaitToBeClickable(driver, "XPath", "//div[@data-tab='third']//i[@class='remove icon']", 8);
-            }
-            catch (WebDriverTimeoutException e)
-            {
-                return;
-            }
-            IReadOnlyCollection<IWebElement> deleteButtons = driver.FindElements(By.XPath("//div[@data-tab='third']//i[@class='remove icon']"));
-            //Delete all records in the list
-            foreach (IWebElement deleteButton in deleteButtons)
-            {
-                deleteButton.Click();
-            }
+            test = extent.CreateTest("DeleteAllEducation").Info("Test Started");
+            educationPageObj.Delete_All();
+            test.Log(Status.Pass, "Delete all education passed");
         }
+
+
         [Test, Order(2), Description("This test is creating a new Education")]
+        
         public void Add_Education()
         {
             // Read test data for the AddEducation test case
@@ -86,6 +81,7 @@ namespace CompetitionTaskMars.Tests
 
             // Iterate through test data and retrieve AddEducation test data
             foreach (EducationData educationData in educationDataList)
+
             {
                 test = extent.CreateTest("AddEducation").Info("Test Started");
                 educationPageObj.Add_Education(educationData);
@@ -108,7 +104,7 @@ namespace CompetitionTaskMars.Tests
 
                 test.Log(Status.Info, "Add education started");
             }
-        }
+        }  
 
         [TestCase(1)]
         [Test, Order(3), Description("This test is editing an existing Education")]
@@ -125,8 +121,8 @@ namespace CompetitionTaskMars.Tests
             test = extent.CreateTest("EditEducation").Info("Test Started");
             educationPageObj.Edit_Education(existingEducationData, newEducationData);
 
-            //string actualMessage = educationPageObj.getMessage();
-            //Assert.That(actualMessage == "Education has been updated", "Actual message and expected message do not match");
+            string actualMessage = educationPageObj.getMessage();
+            Assert.That(actualMessage == "Education as been updated", "Actual message and expected message do not match");
 
             //Access education configuration settings
             string updatedCollegeName = educationPageObj.getCollegeName(newEducationData.CollegeName);
@@ -142,6 +138,7 @@ namespace CompetitionTaskMars.Tests
             Assert.That(updatedGraduationYear == newEducationData.GraduationYear, "Actual year and expected year name do not match");
             test.Log(Status.Info, "Edit education started");
         }
+
         [Test, Order(4), Description("Check if user able to cancel education field while editing the field")]
         [TestCase(1)]
         public void Cancel_Education(int id)
@@ -166,10 +163,20 @@ namespace CompetitionTaskMars.Tests
             test = extent.CreateTest("DeleteEducation").Info("Test Started");
             educationPageObj.Delete_Education(existingEducationData);
 
-            //string actualMessage = educationPageObj.getMessage();
-            //Assert.That(actualMessage == "Education has been deleted", "Actual message and expected message do not match");
+        }
+        private void CaptureScreenshot(string screenshotName)
+        {
+            //Capture the screenshot
+            ITakesScreenshot ts = (ITakesScreenshot)driver;
+            Screenshot screenshot = ts.GetScreenshot();
+
+            //Specify the path and filename for the screenshot with a timestamp
+            string filepath = "@\"D:\\Hema\\IndustryConnect\\Internship\\CompetitionTask\\CompetitionTaskMars\\Screenshot";
+            string screenshotPath = Path.Combine(filepath, $"{screenshotName}_{DateTime.Now:yyyyMMdd_HHmmss}.png");
+            screenshot.SaveAsFile(screenshotPath);
         }
 
+       
         [TearDown]
         public void EducationTearDown() 
         {
