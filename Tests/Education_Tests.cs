@@ -3,16 +3,7 @@ using AventStack.ExtentReports.Reporter;
 using CompetitionTaskMars.Data;
 using CompetitionTaskMars.Pages;
 using CompetitionTaskMars.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using RazorEngine;
-using System.Drawing.Imaging;
 
 namespace CompetitionTaskMars.Tests
 {
@@ -22,25 +13,19 @@ namespace CompetitionTaskMars.Tests
         LoginPage loginPageObj = new LoginPage();
         ProfilePage profilePageObj = new ProfilePage();
         Education educationPageObj = new Education();
-        public static ExtentTest test;
-        public static ExtentReports extent;
-        EducationData educationData;
 
         public Education_Tests()
         {
             loginPageObj = new LoginPage();
             profilePageObj = new ProfilePage();
             educationPageObj = new Education();
-
         }
 
         [SetUp]
         public void LoginSetUp()
         {
             //Open Chrome browser
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl("http://localhost:5000/Home");
+            Initialize();
 
             //Login page object initialization and definition
             loginPageObj.LoginActions();
@@ -70,20 +55,15 @@ namespace CompetitionTaskMars.Tests
             educationPageObj.Delete_All();
             test.Log(Status.Pass, "Delete all education passed");
         }
-
-
+    
         [Test, Order(2), Description("This test is creating a new Education")]
-        
-        public void Add_Education()
-        {
-            // Read test data for the AddEducation test case
-            List<EducationData> educationDataList = EducationDataHelper.ReadEducationData(@"addEducationData.json");
-
-            // Iterate through test data and retrieve AddEducation test data
-            foreach (EducationData educationData in educationDataList)
-
-            {
+        [TestCase(1)]
+        public void Add_Education(int id)
+         {
                 test = extent.CreateTest("AddEducation").Info("Test Started");
+                EducationData educationData = EducationDataHelper
+                .ReadEducationData(@"addEducationData.json")
+                .FirstOrDefault(x => x.Id == id);
                 educationPageObj.Add_Education(educationData);
 
                 string actualMessage = educationPageObj.getMessage();
@@ -103,11 +83,75 @@ namespace CompetitionTaskMars.Tests
                 Assert.That(newGraduationYear == educationData.GraduationYear, "Actual year and expected year name do not match");
 
                 test.Log(Status.Info, "Add education started");
-            }
-        }  
+         }
+
+        [Test, Order(3), Description("This test is adding a new Education with special characters")]
+        [TestCase(2)]
+        public void Add_EducationSpecial(int id)
+        {
+            CaptureScreenshot("ScreenshotName");
+
+            test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+            EducationData educationData = EducationDataHelper
+            .ReadEducationData(@"addEducationData.json")
+            .FirstOrDefault(x => x.Id == id);
+            educationPageObj.Add_Education(educationData);
+            
+             // Arrange
+            string actualMessage = educationPageObj.getMessage();
+            string expectedMessage = "Education has been added"; // Update this to the expected message
+            Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
+
+            test.Log(Status.Fail, "Education failed: ");
+            Console.WriteLine(actualMessage);
+            CaptureScreenshot("SpecialCharactersFailed");
+        }
+
+        [Test, Order(4), Description("This test is adding a new Education with empty text box")]
+        [TestCase(3)]
+        public void Add_EducationEmptyTextbox(int id)
+        {
+            CaptureScreenshot("ScreenshotName");
+            test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+            EducationData educationData = EducationDataHelper
+            .ReadEducationData(@"addEducationData.json")
+            .FirstOrDefault(x => x.Id == id);
+            educationPageObj.Add_Education(educationData);
+
+            // Arrange
+            string actualMessage = educationPageObj.getMessage();
+            string expectedMessage = "Please enter all the fields"; // Update this to the expected message
+            Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
+
+            test.Log(Status.Fail, "Education failed: ");
+            Console.WriteLine(actualMessage);
+            CaptureScreenshot("EmptyTextBoxFailed");
+        }
+
+        [Test, Order(5), Description("This test is adding a new Education with special characters")]
+        [TestCase(4)]
+        public void Add_EducationMoreCharacters(int id)
+        {
+            CaptureScreenshot("ScreenshotName");
+
+            test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+            EducationData educationData = EducationDataHelper
+            .ReadEducationData(@"addEducationData.json")
+            .FirstOrDefault(x => x.Id == id);
+            educationPageObj.Add_Education(educationData);
+
+            // Arrange
+            string actualMessage = educationPageObj.getMessage();
+            string expectedMessage = "Education has been added"; // Update this to the expected message
+            Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
+
+            test.Log(Status.Fail, "Education failed: ");
+            Console.WriteLine(actualMessage);
+            CaptureScreenshot("MoreCharactersFailed");
+        }
 
         [TestCase(1)]
-        [Test, Order(3), Description("This test is editing an existing Education")]
+        [Test, Order(6), Description("This test is editing an existing Education")]
         public void Edit_Education(int id)
         {
             // Read test data for the AddEducation test case
@@ -139,7 +183,7 @@ namespace CompetitionTaskMars.Tests
             test.Log(Status.Info, "Edit education started");
         }
 
-        [Test, Order(4), Description("Check if user able to cancel education field while editing the field")]
+        [Test, Order(7), Description("Check if user able to cancel education field while editing the field")]
         [TestCase(1)]
         public void Cancel_Education(int id)
         {
@@ -150,8 +194,7 @@ namespace CompetitionTaskMars.Tests
             Assert.That(string.IsNullOrEmpty(cancelEducation), Is.True, "Cancelled successfully");
         }
 
-
-        [Test, Order(5), Description("This test is deleting an existing Education")]
+        [Test, Order(8), Description("This test is deleting an existing Education")]
         [TestCase (1)]
         public void Delete_Education(int id)
         {
@@ -162,25 +205,12 @@ namespace CompetitionTaskMars.Tests
 
             test = extent.CreateTest("DeleteEducation").Info("Test Started");
             educationPageObj.Delete_Education(existingEducationData);
-
-        }
-        private void CaptureScreenshot(string screenshotName)
-        {
-            //Capture the screenshot
-            ITakesScreenshot ts = (ITakesScreenshot)driver;
-            Screenshot screenshot = ts.GetScreenshot();
-
-            //Specify the path and filename for the screenshot with a timestamp
-            string filepath = "@\"D:\\Hema\\IndustryConnect\\Internship\\CompetitionTask\\CompetitionTaskMars\\Screenshot";
-            string screenshotPath = Path.Combine(filepath, $"{screenshotName}_{DateTime.Now:yyyyMMdd_HHmmss}.png");
-            screenshot.SaveAsFile(screenshotPath);
         }
 
-       
         [TearDown]
         public void EducationTearDown() 
         {
-            driver.Quit();
+            Close();
         }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using CompetitionTaskMars.Data;
 using CompetitionTaskMars.Utilities;
-using DocumentFormat.OpenXml.Math;
-using DocumentFormat.OpenXml.Presentation;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-
 
 namespace CompetitionTaskMars.Pages
 {
@@ -23,8 +20,7 @@ namespace CompetitionTaskMars.Pages
         private Func<string, IWebElement> newCountry = Country => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Country}']"));
         private Func<string, IWebElement> newTitle = Title => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Title}']"));
         private Func<string, IWebElement> newDegree = Degree => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Degree}']"));
-        private Func<string, IWebElement> newGraduationYear = GraduationYear => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{GraduationYear}']"));
-        
+        private Func<string, IWebElement> newGraduationYear = GraduationYear => driver.FindElement(By.XPath($"//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{GraduationYear}']")); 
         private IWebElement updateButton => driver.FindElement(By.XPath("//input[@value=\"Update\"]"));
         private IWebElement cancelButton => driver.FindElement(By.XPath("//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//input[@value='Cancel']"));
 
@@ -46,7 +42,7 @@ namespace CompetitionTaskMars.Pages
             }
         }
         public void Add_Education(EducationData educationData) 
-         {
+        {
             //Click Add New button 
             addNewButton.Click();
 
@@ -84,14 +80,12 @@ namespace CompetitionTaskMars.Pages
             //Wait.WaitToExist(driver, "XPath", "//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{CollegeName}']", 8);
             return newCollegeName(CollegeName).Text;
         }
-
         public string getCountry(string Country)
         {
             Thread.Sleep(4000);
             //Wait.WaitToExist(driver, "XPath", "//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Country}']", 8);
             return newCountry(Country).Text;
-        }
-      
+        }    
         public string getTitle(string Title)
         {
             Thread.Sleep(4000);
@@ -104,18 +98,15 @@ namespace CompetitionTaskMars.Pages
             //Wait.WaitToExist(driver, "XPath", "//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{Degree}']", 8);
             return newDegree(Degree).Text;
         }
-
         public string getGraduationYear(string GraduationYear)
         {
             Thread.Sleep(4000);
             //Wait.WaitToExist(driver, "XPath", "//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//td[text()='{GraduationYear}']", 8);
             return newGraduationYear(GraduationYear).Text;
         }
-
         public void Edit_Education(EducationData existingEducationData, EducationData newEducationData)
         {
             Thread.Sleep(4000);
-
             string xPath = $@"//div[@data-tab='third']//tr[" +
             $"td[1]='{existingEducationData.Country}' and td[2]='{existingEducationData.CollegeName}'" +
             $" and td[3]='{existingEducationData.Title}' and td[4]='{existingEducationData.Degree}'" +
@@ -163,7 +154,6 @@ namespace CompetitionTaskMars.Pages
         public void Delete_Education(EducationData existingEducationData) 
         {
             //Delete an existing education
-
             string xPath = $@"//div[@data-tab='third']//tr[" +
            $"td[1]='{existingEducationData.Country}' and td[2]='{existingEducationData.CollegeName}'" +
            $" and td[3]='{existingEducationData.Title}' and td[4]='{existingEducationData.Degree}'" +
@@ -172,5 +162,4 @@ namespace CompetitionTaskMars.Pages
             deleteIcon.Click();
         }
     }
-
  }

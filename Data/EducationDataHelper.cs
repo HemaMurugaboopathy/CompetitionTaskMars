@@ -12,8 +12,7 @@ namespace CompetitionTaskMars.Data
             string jsonContent = File.ReadAllText(filePath);
 
             return JsonConvert.DeserializeObject<List<EducationData>>(jsonContent) ?? new List<EducationData>();
-        }
-        
+        }   
     }
 }
         
