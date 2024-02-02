@@ -13,7 +13,8 @@ namespace CompetitionTaskMars.Tests
         LoginPage loginPageobj = new LoginPage();
         ProfilePage profilePageobj = new ProfilePage();
         Certification certificationPageobj = new Certification();
-        
+        public static ExtentTest test;
+        public static ExtentReports extent;
         public Certification_Tests()
         {
             loginPageobj = new LoginPage();
@@ -24,6 +25,7 @@ namespace CompetitionTaskMars.Tests
         [SetUp]
         public void LoginSetUp()
         {
+            //Open Chrome browser
             Initialize();
 
             //Login page object initialization and definition
@@ -36,22 +38,31 @@ namespace CompetitionTaskMars.Tests
         [OneTimeSetUp]
         public void ExtentStart()
         {
+            // Create a new instance of ExtentReports to manage test reports
             extent = new ExtentReports();
-            var sparkReporter = new ExtentSparkReporter(@"D:\Hema\IndustryConnect\Internship\CompetitionTask\CompetitionTaskMars\ExtentReports\EducationReport.html");
+
+            // Create a new ExtentSparkReporter to define the HTML report file path and configuration
+            var sparkReporter = new ExtentSparkReporter(@"D:\Hema\IndustryConnect\Internship\CompetitionTask\CompetitionTaskMars\ExtentReports\CertificationReport.html");
+            
+            // Attach the ExtentSparkReporter to the ExtentReports instance for report generation
             extent.AttachReporter(sparkReporter);
         }
 
         [OneTimeTearDown]
         public void ExtentClose()
         {
+            // Flush the ExtentReports instance to finalize and write all information to the report files
             extent.Flush();
         }
 
         [Test, Order(1), Description("This is deleting all certificate before entering details")]
         public void Delete_All()
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("DeleteAllCertification").Info("Test Started");
             certificationPageobj.Delete_All();
+
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Pass, "Delete all certification passed");        
         }
 
@@ -59,30 +70,33 @@ namespace CompetitionTaskMars.Tests
         [Test, Order(2), Description("This is creating a new certification")]     
         public void Add_Certification(int id)
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddCertification").Info("Test Started");
+            
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData certificationData = CertificationDataHelper
                 .ReadCertificationData(@"addCertificationData.json")
                 .FirstOrDefault(x => x.Id == id);
                 certificationPageobj.Add_Certification(certificationData);
 
-            //string actualMessage = certificationPageobj.getMessage();
-            //Assert.That(actualMessage == "Certification has been added", "Actual message and expected message do not match");
-
             //Access certification configuration settings
             string newCertificate = certificationPageobj.getCertificate(certificationData.Certificate);
-                string newCertifiedFrom = certificationPageobj.getCertifiedFrom(certificationData.CertifiedFrom);
-                string newCertifiedYear = certificationPageobj.getertifiedYear(certificationData.CertifiedYear);
+            string newCertifiedFrom = certificationPageobj.getCertifiedFrom(certificationData.CertifiedFrom);
+            string newCertifiedYear = certificationPageobj.getertifiedYear(certificationData.CertifiedYear);
 
-                Assert.That(newCertificate == certificationData.Certificate, "Actual certificate and expected certificate does not match");
-                Assert.That(newCertifiedFrom == certificationData.CertifiedFrom, "Actual certificate and expected certificate does not match");
-                Assert.That(newCertifiedYear == certificationData.CertifiedYear, "Actual certificate and expected certificate does not match");
+            Assert.That(newCertificate == certificationData.Certificate, "Actual certificate and expected certificate does not match");
+            Assert.That(newCertifiedFrom == certificationData.CertifiedFrom, "Actual certificate and expected certificate does not match");
+            Assert.That(newCertifiedYear == certificationData.CertifiedYear, "Actual certificate and expected certificate does not match");
         }
 
         [TestCase(2)]
         [Test, Order(3), Description("This is creating a new certification")]
         public void Add_CertificationSpecialChar(int id)
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddCertificationSpecialChar").Info("Test Started");
+
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData certificationData = CertificationDataHelper
                 .ReadCertificationData(@"addCertificationData.json")
                 .FirstOrDefault(x => x.Id == id);
@@ -94,9 +108,10 @@ namespace CompetitionTaskMars.Tests
 
             // Perform the assertion using a regular expression
             Assert.That(actualMessage, Does.Match(expectedMessagePattern), $"Actual message '{actualMessage}' does not match the expected pattern '{expectedMessagePattern}'");
-            
+
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Certification failed: ");
-            Console.WriteLine(actualMessage);
+
             CaptureScreenshot("SpecialCharactersFailed");
         }
 
@@ -104,7 +119,10 @@ namespace CompetitionTaskMars.Tests
         [Test, Order(4), Description("This is creating a certification with empyt text box")]
         public void Add_CertificationEmptyTextbox(int id)
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddCertificationEmptyTextBox").Info("Test Started");
+
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData certificationData = CertificationDataHelper
                 .ReadCertificationData(@"addCertificationData.json")
                 .FirstOrDefault(x => x.Id == id);
@@ -115,8 +133,9 @@ namespace CompetitionTaskMars.Tests
             string expectedMessage = "Please enter Certification Name, Certification From and Certification Year"; // Update this to the expected message
             Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
 
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Certification failed: ");
-            Console.WriteLine(actualMessage);
+           
             CaptureScreenshot("CertificationEmptyTextBoxFailed");
         }
 
@@ -124,7 +143,10 @@ namespace CompetitionTaskMars.Tests
         [Test, Order(5), Description("This is creating a new certification with more characters")]
         public void Add_CertificationMoreChar(int id)
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddCertificationSpecialChar").Info("Test Started");
+
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData certificationData = CertificationDataHelper
                 .ReadCertificationData(@"addCertificationData.json")
                 .FirstOrDefault(x => x.Id == id);
@@ -137,8 +159,9 @@ namespace CompetitionTaskMars.Tests
             // Perform the assertion using a regular expression
             Assert.That(actualMessage, Does.Match(expectedMessagePattern), $"Actual message '{actualMessage}' does not match the expected pattern '{expectedMessagePattern}'");
 
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Certification failed: ");
-            Console.WriteLine(actualMessage);
+            
             CaptureScreenshot("CertificationMoreCharactersFailed");
         }
         
@@ -146,6 +169,7 @@ namespace CompetitionTaskMars.Tests
         [TestCase(1)]
         public void Edit_Certification(int id)
         {
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData existingCertificationData = CertificationDataHelper
                 .ReadCertificationData(@"addCertificationData.json")
                 .FirstOrDefault(x=>x.Id == id);
@@ -153,6 +177,8 @@ namespace CompetitionTaskMars.Tests
               .ReadCertificationData(@"editCertificationData.json")
             .FirstOrDefault(x => x.Id == id);
 
+            // Create a new test and log the test start information
+            test = extent.CreateTest("EditCertification").Info("Test Started");
             certificationPageobj.Edit_Certification(existingCertificationData, newCertificationData);
 
             //Access certification configuration settings
@@ -169,19 +195,32 @@ namespace CompetitionTaskMars.Tests
         [TestCase (1)]
         public void Cancel_Certification(int id)
         {
+            // Create a new test and log the test start information
+            test = extent.CreateTest("CancelCertification").Info("Test Started");
+            
             string cancelCertification = certificationPageobj.getCancel();
             Assert.That(string.IsNullOrEmpty(cancelCertification), Is.True, "Cancelled successfully");
+
+            // Log a pass status for the test and add a corresponding log message
+            test.Log(Status.Fail, "Cancelled Successfully: ");
         }
+
 
         [Test, Order(8), Description("This is deleting an existing certificate")]
         [TestCase(1)]
         public void Delete_Certification(int id)
         {
+            // Read certification data from the specified JSON file and retrieve the first item with a matching Id
             CertificationData existingCertificationData = CertificationDataHelper
                .ReadCertificationData(@"deleteCertificationData.json")
                .FirstOrDefault(x => x.Id == id);
 
+            // Create a new test and log the test start information
+            test = extent.CreateTest("DeleteCertification").Info("Test Started");
             certificationPageobj.Delete_Certification(existingCertificationData);
+
+            // Log a pass status for the test and add a corresponding log message
+            test.Log(Status.Info, "Delete certification started");
         }
 
         [TearDown]

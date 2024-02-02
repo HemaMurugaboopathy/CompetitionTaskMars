@@ -7,9 +7,7 @@ namespace CompetitionTaskMars.Utilities
     public class CommonDriver
     {
         public const string Url = "http://localhost:5000/";
-        public static IWebDriver driver;
-        public static ExtentTest test;
-        public static ExtentReports extent;
+        public static IWebDriver driver;  
 
         public void Initialize()
         {

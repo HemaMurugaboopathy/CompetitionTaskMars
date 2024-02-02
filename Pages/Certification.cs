@@ -121,8 +121,8 @@ namespace CompetitionTaskMars.Pages
               string xPath = $@"//div[@data-tab='fourth']//tr[" +
                $"td[1]='{existingCertificationData.Certificate}' and td[2]='{existingCertificationData.CertifiedFrom}'" +
                $" and td[3]='{existingCertificationData.CertifiedYear}']/td[last()]/span[2]";
-            //Click edit icon to edit an existing certificate
-
+            
+            //Click delete icon to delete an existing certificate
             IWebElement deleteIcon = driver.FindElement(By.XPath(xPath));
             deleteIcon.Click();
         }

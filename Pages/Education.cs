@@ -7,6 +7,7 @@ namespace CompetitionTaskMars.Pages
 {
     public class Education: CommonDriver
     {
+        //Find Element by ID
         private IWebElement addNewButton => driver.FindElement(By.XPath("//div[@class='four wide column' and h3='Education']/following-sibling::div[@class='twelve wide column scrollTable']//th[@class='right aligned']/div"));
         private IWebElement collegeTextbox => driver.FindElement(By.XPath("//input[@placeholder='College/University Name']"));
         private IWebElement countryDropdown => driver.FindElement(By.XPath("//select[@name='country']"));

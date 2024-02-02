@@ -13,6 +13,8 @@ namespace CompetitionTaskMars.Tests
         LoginPage loginPageObj = new LoginPage();
         ProfilePage profilePageObj = new ProfilePage();
         Education educationPageObj = new Education();
+        public static ExtentTest test;
+        public static ExtentReports extent;
 
         public Education_Tests()
         {
@@ -37,22 +39,33 @@ namespace CompetitionTaskMars.Tests
         [OneTimeSetUp]
         public void ExtentStart()
         {
+            // Create a new instance of ExtentReports to manage test reports
             extent = new ExtentReports();
+
+            // Create a new ExtentSparkReporter to define the HTML report file path and configuration
             var sparkReporter = new ExtentSparkReporter(@"D:\Hema\IndustryConnect\Internship\CompetitionTask\CompetitionTaskMars\ExtentReports\EducationReport.html");
+            
+            // Attach the ExtentSparkReporter to the ExtentReports instance for report generation
             extent.AttachReporter(sparkReporter);
         }
 
         [OneTimeTearDown]
         public void ExtentClose()
         {
+            // Flush the ExtentReports instance to finalize and write all information to the report files
             extent.Flush();
         }
 
         [Test, Order(1), Description("This test is deleting all entries before addind new data")]
         public void Delete_All()
         {
+            // Create a new test named "DeleteAllEducation" and log the test start information
             test = extent.CreateTest("DeleteAllEducation").Info("Test Started");
+            
+            // Call the Delete_All method on the educationPageObj to perform the deletion operation
             educationPageObj.Delete_All();
+           
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Pass, "Delete all education passed");
         }
     
@@ -60,38 +73,51 @@ namespace CompetitionTaskMars.Tests
         [TestCase(1)]
         public void Add_Education(int id)
          {
-                test = extent.CreateTest("AddEducation").Info("Test Started");
-                EducationData educationData = EducationDataHelper
+            // Create a new test and log the test start information
+            test = extent.CreateTest("AddEducation").Info("Test Started");
+
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
+            EducationData educationData = EducationDataHelper
                 .ReadEducationData(@"addEducationData.json")
                 .FirstOrDefault(x => x.Id == id);
-                educationPageObj.Add_Education(educationData);
 
-                string actualMessage = educationPageObj.getMessage();
-                Assert.That(actualMessage == "Education has been added", "Actual message and expected message do not match");
+            // Call the Add_Education method on the educationPageObj to perform the add operation
+            educationPageObj.Add_Education(educationData);
 
-                //Access education configuration settings
-                string newCollegeName = educationPageObj.getCollegeName(educationData.CollegeName);
-                string newCountry = educationPageObj.getCountry(educationData.Country);
-                string newTitle = educationPageObj.getTitle(educationData.Title);
-                string newDegree = educationPageObj.getDegree(educationData.Degree);
-                string newGraduationYear = educationPageObj.getGraduationYear(educationData.GraduationYear);
+            // Get the actual message from the educationPageObj
+            string actualMessage = educationPageObj.getMessage();
 
-                Assert.That(newCollegeName == educationData.CollegeName, "Actual college name and expected college name do not match");
-                Assert.That(newCountry == educationData.Country, "Actual country and expected country do not match");
-                Assert.That(newTitle == educationData.Title, "Actual title and expected title do not match");
-                Assert.That(newDegree == educationData.Degree, "Actual degree and expected degree do not match");
-                Assert.That(newGraduationYear == educationData.GraduationYear, "Actual year and expected year name do not match");
+            // Assert that the actual message is equal to the expected message
+            Assert.That(actualMessage == "Education has been added", "Actual message and expected message do not match");
 
-                test.Log(Status.Info, "Add education started");
+            //Access education configuration settings
+             string newCollegeName = educationPageObj.getCollegeName(educationData.CollegeName);
+             string newCountry = educationPageObj.getCountry(educationData.Country);
+             string newTitle = educationPageObj.getTitle(educationData.Title);
+             string newDegree = educationPageObj.getDegree(educationData.Degree);
+             string newGraduationYear = educationPageObj.getGraduationYear(educationData.GraduationYear);
+
+             Assert.That(newCollegeName == educationData.CollegeName, "Actual college name and expected college name do not match");
+             Assert.That(newCountry == educationData.Country, "Actual country and expected country do not match");
+             Assert.That(newTitle == educationData.Title, "Actual title and expected title do not match");
+             Assert.That(newDegree == educationData.Degree, "Actual degree and expected degree do not match");
+             Assert.That(newGraduationYear == educationData.GraduationYear, "Actual year and expected year name do not match");
+
+            // Log a pass status for the test and add a corresponding log message
+              test.Log(Status.Info, "Add education started");
          }
 
         [Test, Order(3), Description("This test is adding a new Education with special characters")]
         [TestCase(2)]
         public void Add_EducationSpecial(int id)
         {
+            // Capture a screenshot with a specified name 
             CaptureScreenshot("ScreenshotName");
 
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+           
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
             EducationData educationData = EducationDataHelper
             .ReadEducationData(@"addEducationData.json")
             .FirstOrDefault(x => x.Id == id);
@@ -102,6 +128,7 @@ namespace CompetitionTaskMars.Tests
             string expectedMessage = "Education has been added"; // Update this to the expected message
             Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
 
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Education failed: ");
             Console.WriteLine(actualMessage);
             CaptureScreenshot("SpecialCharactersFailed");
@@ -111,8 +138,13 @@ namespace CompetitionTaskMars.Tests
         [TestCase(3)]
         public void Add_EducationEmptyTextbox(int id)
         {
+            // Capture a screenshot with a specified name 
             CaptureScreenshot("ScreenshotName");
+
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
             EducationData educationData = EducationDataHelper
             .ReadEducationData(@"addEducationData.json")
             .FirstOrDefault(x => x.Id == id);
@@ -123,8 +155,9 @@ namespace CompetitionTaskMars.Tests
             string expectedMessage = "Please enter all the fields"; // Update this to the expected message
             Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
 
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Education failed: ");
-            Console.WriteLine(actualMessage);
+           
             CaptureScreenshot("EmptyTextBoxFailed");
         }
 
@@ -132,9 +165,12 @@ namespace CompetitionTaskMars.Tests
         [TestCase(4)]
         public void Add_EducationMoreCharacters(int id)
         {
+            // Capture a screenshot with a specified name 
             CaptureScreenshot("ScreenshotName");
 
+            // Create a new test and log the test start information
             test = extent.CreateTest("AddEducationWithSpecialCharacters").Info("Test Started");
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
             EducationData educationData = EducationDataHelper
             .ReadEducationData(@"addEducationData.json")
             .FirstOrDefault(x => x.Id == id);
@@ -145,6 +181,7 @@ namespace CompetitionTaskMars.Tests
             string expectedMessage = "Education has been added"; // Update this to the expected message
             Assert.That(actualMessage, Is.EqualTo(expectedMessage), $"Actual message '{actualMessage}' does not match expected message '{expectedMessage}'");
 
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Fail, "Education failed: ");
             Console.WriteLine(actualMessage);
             CaptureScreenshot("MoreCharactersFailed");
@@ -154,7 +191,7 @@ namespace CompetitionTaskMars.Tests
         [Test, Order(6), Description("This test is editing an existing Education")]
         public void Edit_Education(int id)
         {
-            // Read test data for the AddEducation test case
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
             EducationData existingEducationData = EducationDataHelper
                 .ReadEducationData(@"addEducationData.json")
                 .FirstOrDefault(x => x.Id == id);
@@ -162,6 +199,7 @@ namespace CompetitionTaskMars.Tests
                 .ReadEducationData(@"editEducationData.json")
                 .FirstOrDefault(x => x.Id == id);
 
+            // Create a new test and log the test start information
             test = extent.CreateTest("EditEducation").Info("Test Started");
             educationPageObj.Edit_Education(existingEducationData, newEducationData);
 
@@ -178,8 +216,10 @@ namespace CompetitionTaskMars.Tests
             Assert.That(updatedCollegeName == newEducationData.CollegeName, "Actual college name and expected college name do not match");
             Assert.That(updatedCountry == newEducationData.Country, "Actual country and expected country do not match");
             Assert.That(updatedTitle == newEducationData.Title, "Actual title and expected title do not match");
-            Assert.That(updatedDegree == newEducationData.Degree, "Actual degree and expected degree do not match");
+            Assert.That(updatedDegree == newEducationData.Degree, "Actual degree and expected degree do not match"); 
             Assert.That(updatedGraduationYear == newEducationData.GraduationYear, "Actual year and expected year name do not match");
+
+            // Log a pass status for the test and add a corresponding log message
             test.Log(Status.Info, "Edit education started");
         }
 
@@ -187,24 +227,31 @@ namespace CompetitionTaskMars.Tests
         [TestCase(1)]
         public void Cancel_Education(int id)
         {
+            // Create a new test and log the test start information
             test = extent.CreateTest("CancelEducation").Info("Test Started");
-            //educationPageObj.Delete_Education(existingEducationData);
 
             string cancelEducation = educationPageObj.getCancel();
             Assert.That(string.IsNullOrEmpty(cancelEducation), Is.True, "Cancelled successfully");
+
+            // Log a pass status for the test and add a corresponding log message
+            test.Log(Status.Info, "Cancelled Successfully: ");
         }
 
         [Test, Order(8), Description("This test is deleting an existing Education")]
         [TestCase (1)]
         public void Delete_Education(int id)
         {
-            //Read test data from the DeleteEducation test case
+            // Read education data from the specified JSON file and retrieve the first item with a matching Id
             EducationData existingEducationData = EducationDataHelper
                 .ReadEducationData(@"deleteEducationData.json")
                 .FirstOrDefault(x => x.Id == id);
 
+            // Create a new test and log the test start information
             test = extent.CreateTest("DeleteEducation").Info("Test Started");
             educationPageObj.Delete_Education(existingEducationData);
+
+            // Log a pass status for the test and add a corresponding log message
+            test.Log(Status.Info, "Delete education started");
         }
 
         [TearDown]
